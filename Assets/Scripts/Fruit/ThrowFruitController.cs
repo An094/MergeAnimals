@@ -14,8 +14,7 @@ public class ThrowFruitController : MonoBehaviour
     private PlayerController _playerController;
 
     private Rigidbody2D _rb;
-    private CircleCollider2D _circleCollider;
-    private CapsuleCollider2D _capsuleCollider;
+    private PolygonCollider2D _collider;
 
     public Bounds Bounds { get; private set; }
 
@@ -60,14 +59,10 @@ public class ThrowFruitController : MonoBehaviour
         GameObject go = Instantiate(fruit, _fruitTransform);
         CurrentFruit = go;
 
-        _circleCollider = CurrentFruit.GetComponent<CircleCollider2D>();
-        if(_circleCollider != null)
+        _collider = CurrentFruit.GetComponent<PolygonCollider2D>();
+        if(_collider != null)
         {
-            Bounds = _circleCollider.bounds;
-        }
-        else
-        {
-            Bounds = CurrentFruit.GetComponent<CapsuleCollider2D>().bounds;
+            Bounds = _collider.bounds;
         }
         _playerController.ChangeBoundary(EXTRA_WIDTH);
     }

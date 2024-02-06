@@ -38,9 +38,9 @@ public class FruitCombiner : MonoBehaviour
 
                         else
                         {
-                            Vector3 middlePosition = (transform.position + collision.transform.position) / 2f;
+                            Vector3 combinedFruitPos = (transform.position + collision.transform.position) / 2f + new Vector3(0f, 0.05f, 0f);
                             GameObject go = Instantiate(SpawnCombinedFruit(_info.FruitIndex), GameManager.instance.transform);
-                            go.transform.position = middlePosition;
+                            go.transform.position = combinedFruitPos;
 
                             ColliderInformer informer = go.GetComponent<ColliderInformer>();
                             if (informer != null)

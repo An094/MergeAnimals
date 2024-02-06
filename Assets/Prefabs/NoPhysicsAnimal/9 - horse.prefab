@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7956992787992966809}
   - component: {fileID: 9038289589807052877}
-  - component: {fileID: 818673276497989894}
   - component: {fileID: 8802447752288742299}
+  - component: {fileID: 5560877395875338394}
   m_Layer: 0
   m_Name: 9 - horse
   m_TagString: Untagged
@@ -29,7 +29,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.55, y: 0.55, z: 0.55}
+  m_LocalScale: {x: 0.95000005, y: 0.95000005, z: 0.95000005}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -75,7 +75,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 11
-  m_Sprite: {fileID: 21300000, guid: a32aa8c31c0d24c40a7b0198b69629be, type: 3}
+  m_Sprite: {fileID: 21300000, guid: bfa6da97543bf8f4f92fc120d5795768, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -86,8 +86,21 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!58 &818673276497989894
-CircleCollider2D:
+--- !u!114 &8802447752288742299
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4498854808342264413}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8db6b1cd1a060ee4e864cc1c47b4d54b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Index: 8
+--- !u!70 &5560877395875338394
+CapsuleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -118,19 +131,6 @@ CircleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.00752449, y: -0.07469448}
-  serializedVersion: 2
-  m_Radius: 0.9012154
---- !u!114 &8802447752288742299
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4498854808342264413}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8db6b1cd1a060ee4e864cc1c47b4d54b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Index: 8
+  m_Offset: {x: 0.009737575, y: -0.06816275}
+  m_Size: {x: 1.4889212, y: 1.8636713}
+  m_Direction: 0

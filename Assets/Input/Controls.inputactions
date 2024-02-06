@@ -193,7 +193,7 @@
                 {
                     "name": "",
                     "id": "e9b20f1a-2ac7-41b1-9d3e-f06b57dcccc9",
-                    "path": "<Keyboard>/space",
+                    "path": "<Keyboard>/s",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -205,6 +205,17 @@
                     "name": "",
                     "id": "b1b94c2b-eb16-48e2-b9cc-fceb00e10d1d",
                     "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Throw",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ca8214f7-abcd-4ab6-9f7b-343050e8e61b",
+                    "path": "<Keyboard>/downArrow",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

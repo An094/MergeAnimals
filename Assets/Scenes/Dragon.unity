@@ -3202,7 +3202,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1458322980
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3361,7 +3361,7 @@ BoxCollider2D:
   m_GameObject: {fileID: 1466683544}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 6200000, guid: 595ca0ceab4b21b4e8cb7d84080321f6, type: 2}
+  m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -3738,7 +3738,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1524251908
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4172,7 +4172,7 @@ BoxCollider2D:
   m_GameObject: {fileID: 1585580785}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 6200000, guid: 595ca0ceab4b21b4e8cb7d84080321f6, type: 2}
+  m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -5252,7 +5252,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2055890714}
   m_Layer: 5
-  m_Name: FRUITCHART
+  m_Name: FruitChartForMobile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5644,6 +5644,9 @@ MonoBehaviour:
   _gameOverPanel: {fileID: 1781176519}
   _fadeTime: 2
   CloudPrefab: {fileID: 3395314679924783023, guid: 0eed1588123347e498f8ef16507073cf, type: 3}
+  FruitChartForMobile: {fileID: 2055890713}
+  FruitChart: {fileID: 1524251907}
+  TutorialText: {fileID: 1458322979}
   TimeTillGameOver: 1.5
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

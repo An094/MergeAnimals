@@ -16,7 +16,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Image _gameOverPanel;
     [SerializeField] private float _fadeTime = 2f;
     [SerializeField] private GameObject CloudPrefab;
-
+    [SerializeField] private GameObject FruitChartForMobile;
+    [SerializeField] private GameObject FruitChart;
+    [SerializeField] private GameObject TutorialText;
     private Vector2 ScreenBounds;
     private const float PADDING = 2f;
     public float TimeTillGameOver = 1.5f;
@@ -39,6 +41,19 @@ public class GameManager : MonoBehaviour
         }
 
         _scoreText.text = CurrentScore.ToString("0");
+
+        if(Application.isMobilePlatform)
+        {
+            FruitChartForMobile.SetActive(true);
+            FruitChart.SetActive(false);
+            TutorialText.SetActive(false);
+        }
+        else
+        {
+            FruitChartForMobile.SetActive(false);
+            FruitChart.SetActive(true);
+            TutorialText.SetActive(true);
+        }
     }
 
     private void Start()

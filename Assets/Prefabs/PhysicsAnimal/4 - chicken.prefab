@@ -103,7 +103,7 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 3
+  m_LinearDrag: 2
   m_AngularDrag: 0
   m_GravityScale: 2
   m_Material: {fileID: 0}
@@ -143,7 +143,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   FruitIndex: 3
   PointsWhenAnnihilated: 10
-  FruitMass: 3
+  FruitMass: 2.5
 --- !u!114 &5673700191861458592
 MonoBehaviour:
   m_ObjectHideFlags: 0

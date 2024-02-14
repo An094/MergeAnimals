@@ -40,7 +40,8 @@ public class ThrowFruitController : MonoBehaviour
 
     private void Update()
     {
-        if (UserInput.IsThrowPressed && CanThrow)
+        //if (UserInput.IsThrowPressed && CanThrow) 
+        if(Application.isMobilePlatform && UserInput.WasReleasedThisFrame && CanThrow || !Application.isMobilePlatform && UserInput.IsThrowPressed && CanThrow)
         {
             SpriteIndex index = CurrentFruit.GetComponent<SpriteIndex>();
             Quaternion rot = CurrentFruit.transform.rotation;

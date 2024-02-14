@@ -33,10 +33,24 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        Vector3 newPosition = transform.position + new Vector3(UserInput.MoveInput.x * _moveSpeed * Time.deltaTime, 0f, 0f);
+        Vector3 newPosition = new Vector3();
+        if (Application.isMobilePlatform)
+        {
+            if (UserInput.IsTouched)
+            {
+                Vector3 TouchPosition = Camera.main.ScreenToWorldPoint(UserInput.TouchPosition);
+                newPosition = new Vector3(TouchPosition.x, transform.position.y, transform.position.z);
+            }
+        }
+        else
+        {
+            newPosition = transform.position + new Vector3(UserInput.MoveInput.x * _moveSpeed * Time.deltaTime, 0f, 0f);
+        }
+
         newPosition.x = Mathf.Clamp(newPosition.x, _leftBound, _rightBound);
 
         transform.position = newPosition;
+
     }
 
     public void ChangeBoundary(float extraWidth)

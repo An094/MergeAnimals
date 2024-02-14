@@ -6,11 +6,6 @@ public class Cloud : MonoBehaviour
 {
     public bool IsMovingToRight;
     public float Speed;
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
 
     // Update is called once per frame
     void Update()
@@ -18,7 +13,8 @@ public class Cloud : MonoBehaviour
         Vector2 Bounds = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));
         if (transform.position.x < (-Bounds.x - 2f) && !IsMovingToRight || transform.position.x > (Bounds.x + 2f) && IsMovingToRight)
         {
-            Destroy(this.gameObject);
+            //Destroy(this.gameObject);
+            ObjectPoolManager.ReturnObjectToPool(gameObject);
         }
         else
         {

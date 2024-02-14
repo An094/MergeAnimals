@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
 
     public int CurrentScore { get; set; }
 
+    [SerializeField] private GameObject AppearEffect;
     [SerializeField] private TextMeshProUGUI _scoreText;
     [SerializeField] private TextMeshProUGUI _bestScoreText;
     [SerializeField] private Image _gameOverPanel;
@@ -42,16 +43,16 @@ public class GameManager : MonoBehaviour
 
         _scoreText.text = CurrentScore.ToString("0");
 
-        if(Application.isMobilePlatform)
+        if (Application.isMobilePlatform)
         {
-            FruitChartForMobile.SetActive(true);
-            FruitChart.SetActive(false);
+            //FruitChartForMobile.SetActive(true);
+            //FruitChart.SetActive(false);
             TutorialText.SetActive(false);
         }
         else
         {
-            FruitChartForMobile.SetActive(false);
-            FruitChart.SetActive(true);
+            //FruitChartForMobile.SetActive(false);
+            //FruitChart.SetActive(true);
             TutorialText.SetActive(true);
         }
     }
@@ -65,14 +66,15 @@ public class GameManager : MonoBehaviour
 
     IEnumerator SpawnClouds()
     {
-        while(true)
+        while (true)
         {
             float interval = Random.Range(8f, 10f);
             int side = Random.Range(0, 2);
             float height = Random.Range(-ScreenBounds.y + PADDING, ScreenBounds.y - PADDING);
             float speed = Random.Range(0.25f, 0.5f);
             Vector2 position = new Vector2(side != 0 ? ScreenBounds.x + PADDING : -ScreenBounds.x - PADDING, height);
-            GameObject cloudObj = Instantiate(CloudPrefab, position, Quaternion.identity);
+            //GameObject cloudObj = Instantiate(CloudPrefab, position, Quaternion.identity);
+            GameObject cloudObj = ObjectPoolManager.SpawnObject(CloudPrefab, position, Quaternion.identity);
             Cloud cloud = cloudObj.GetComponent<Cloud>();
             cloud.IsMovingToRight = side == 0;
             cloud.Speed = speed;
@@ -83,7 +85,7 @@ public class GameManager : MonoBehaviour
     public void IncreaseScore(int amount)
     {
         CurrentScore += amount;
-        if(CurrentScore > PlayerPrefs.GetInt("BestScore"))
+        if (CurrentScore > PlayerPrefs.GetInt("BestScore"))
         {
             PlayerPrefs.SetInt("BestScore", CurrentScore);
             _bestScoreText.text = CurrentScore.ToString();
@@ -105,7 +107,7 @@ public class GameManager : MonoBehaviour
         _gameOverPanel.color = startColor;
 
         float elapsedTime = 0f;
-        while(elapsedTime < _fadeTime)
+        while (elapsedTime < _fadeTime)
         {
             elapsedTime += Time.deltaTime;
 
@@ -132,7 +134,7 @@ public class GameManager : MonoBehaviour
         _gameOverPanel.color = startColor;
 
         float elapsedTime = 0f;
-        while(elapsedTime < _fadeTime)
+        while (elapsedTime < _fadeTime)
         {
             elapsedTime += Time.deltaTime;
 
@@ -144,5 +146,36 @@ public class GameManager : MonoBehaviour
         }
 
         _gameOverPanel.gameObject.SetActive(false);
+    }
+
+    public void CombineObject(GameObject obj1, GameObject obj2, int index)
+    {
+        Destroy(obj1);
+        Destroy(obj2);
+        Vector3 combinedFruitPos = (obj1.transform.position + obj2.transform.position) / 2f + new Vector3(0f, 0.02f, 0f);
+        GameObject appearEffect = ObjectPoolManager.SpawnObject(AppearEffect, combinedFruitPos, Quaternion.identity);
+
+        StartCoroutine(SpawnNewObject(index, combinedFruitPos));
+    }
+
+    private IEnumerator SpawnNewObject(int index, Vector3 spawnPosition)
+    {
+        float elapsedTime = 0.0f;
+        while (elapsedTime < 0.1f)
+        {
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        
+        GameObject nextObj = FruitSelector.instance.Fruits[index + 1];
+        GameObject go = Instantiate(nextObj, GameManager.instance.transform);
+        go.transform.position = spawnPosition;
+
+        ColliderInformer informer = go.GetComponent<ColliderInformer>();
+        if (informer != null)
+        {
+            informer.WasCombinedIn = true;
+        }
+        //appearEffect.transform.localScale = go.transform.localScale;
     }
 }

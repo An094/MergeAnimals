@@ -102,11 +102,11 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 5
+  m_Mass: 1.5
   m_LinearDrag: 2
   m_AngularDrag: 0
   m_GravityScale: 2
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 595ca0ceab4b21b4e8cb7d84080321f6, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -143,7 +143,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   FruitIndex: 0
   PointsWhenAnnihilated: 1
-  FruitMass: 2.5
+  FruitMass: 1.5
 --- !u!114 &7077346024638523362
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -156,6 +156,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51bf81f4f3e836a44bc1524674a2860e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AppearEffect: {fileID: 820537835068792111, guid: 04332c033dbb70e409b910104e38ce69, type: 3}
 --- !u!114 &2184934540275332614
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -177,7 +178,7 @@ PolygonCollider2D:
   m_GameObject: {fileID: 5037298522827820766}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 595ca0ceab4b21b4e8cb7d84080321f6, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -224,11 +225,12 @@ PolygonCollider2D:
       - {x: 0.745, y: -0.07}
       - {x: 0.73499995, y: 0.04}
       - {x: 0.685, y: 0.17}
-      - {x: 0.625, y: 0.26999998}
-      - {x: 0.585, y: 0.32}
-      - {x: 0.53206646, y: 0.37005767}
-      - {x: 0.44748366, y: 0.41011536}
-      - {x: 0.3751921, y: 0.45166868}
+      - {x: 0.635, y: 0.24}
+      - {x: 0.59499997, y: 0.29}
+      - {x: 0.525, y: 0.35999998}
+      - {x: 0.465, y: 0.39999998}
+      - {x: 0.39499998, y: 0.44}
+      - {x: 0.345, y: 0.45999998}
       - {x: 0.28132826, y: 0.4847943}
       - {x: 0.20130904, y: 0.5017264}
       - {x: 0.12128982, y: 0.515571}

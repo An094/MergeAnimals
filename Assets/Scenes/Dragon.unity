@@ -5510,6 +5510,18 @@ MonoBehaviour:
   FruitChartForMobile: {fileID: 2055890713}
   FruitChart: {fileID: 1524251907}
   TutorialText: {fileID: 1458322979}
+  avatarsprites:
+  - {fileID: 21300000, guid: 3002a1ae2afb0354f89509474df814f2, type: 3}
+  - {fileID: 21300000, guid: 2d1d65b95568f78498374aaff6d66d6f, type: 3}
+  - {fileID: 21300000, guid: d5a1f11d3eeb65847918374eee7be1ac, type: 3}
+  - {fileID: 21300000, guid: d54d27c39a3100548af3d50ee8207b6f, type: 3}
+  - {fileID: 21300000, guid: ef0ede4bc0070774aa53a1be09c9cf50, type: 3}
+  - {fileID: 21300000, guid: e7722c15cf75dda48a562207601b14b6, type: 3}
+  - {fileID: 21300000, guid: 6058cddcbafca734cbd42d013f103fb6, type: 3}
+  - {fileID: 21300000, guid: 32587d36de175c447936ad56b92ec62b, type: 3}
+  - {fileID: 21300000, guid: 6d75f39d186f8ea4ca9bbe31da19e919, type: 3}
+  - {fileID: 21300000, guid: 824f317c5b18dbc48a8575f3ecc995b1, type: 3}
+  playerSprite: {fileID: 1931854582}
   TimeTillGameOver: 1.5
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

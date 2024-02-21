@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System;
 
 public class MergeInfo
 {
@@ -28,6 +29,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject FruitChartForMobile;
     [SerializeField] private GameObject FruitChart;
     [SerializeField] private GameObject TutorialText;
+    [SerializeField] private List<Sprite> avatarsprites;
+    [SerializeField] private SpriteRenderer playerSprite;
     private Vector2 ScreenBounds;
     private const float PADDING = 2f;
     public float TimeTillGameOver = 1.5f;
@@ -68,6 +71,10 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        string avatar = PlayerPrefs.GetString("Avatar", "Cat1");
+        int numberAvatarInList = Convert.ToInt32(avatar.Substring(3));
+        playerSprite.sprite = avatarsprites[numberAvatarInList - 1];
+
         ScreenBounds = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));
         _bestScoreText.text = PlayerPrefs.GetInt("BestScore", 0).ToString();
         StartCoroutine(SpawnClouds());
@@ -77,10 +84,10 @@ public class GameManager : MonoBehaviour
     {
         while (true)
         {
-            float interval = Random.Range(8f, 10f);
-            int side = Random.Range(0, 2);
-            float height = Random.Range(-ScreenBounds.y + PADDING, ScreenBounds.y - PADDING);
-            float speed = Random.Range(0.25f, 0.5f);
+            float interval = UnityEngine.Random.Range(8f, 10f);
+            int side = UnityEngine.Random.Range(0, 2);
+            float height = UnityEngine.Random.Range(-ScreenBounds.y + PADDING, ScreenBounds.y - PADDING);
+            float speed = UnityEngine.Random.Range(0.25f, 0.5f);
             Vector2 position = new Vector2(side != 0 ? ScreenBounds.x + PADDING : -ScreenBounds.x - PADDING, height);
             
             GameObject cloudObj = ObjectPoolManager.SpawnObject(CloudPrefab, position, Quaternion.identity);

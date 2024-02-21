@@ -32,6 +32,8 @@ public class ShopManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //for debugging
+        PlayerPrefs.SetInt("DB", 1000);
         NumberOfDB = PlayerPrefs.GetInt("DB", 1000);
         NumberOfDBallLabel.text = NumberOfDB.ToString();
         CurrentAvatar = PlayerPrefs.GetString("Avatar", "Cat1");
@@ -52,7 +54,7 @@ public class ShopManager : MonoBehaviour
         string avatarName = "Cat" + index.ToString();
         bool WasBought = PlayerPrefs.GetInt(avatarName, 0) != 0;
         CurrentAvatar = PlayerPrefs.GetString("Avatar", "Cat1");
-
+        CurrentItemIndexInSwipe = index;
         if (WasBought && CurrentAvatar == avatarName)
         {
             action = PosibleAction.None;//This mean item have been bought and setted as default avatar
@@ -70,6 +72,7 @@ public class ShopManager : MonoBehaviour
 
     private void UpdateUI(PosibleAction InBehavior)
     {
+        NumberOfDBallLabel.text = NumberOfDB.ToString();
         switch (InBehavior)
         {
             case PosibleAction.Buy:

@@ -13,7 +13,10 @@ public class FruitInfo : MonoBehaviour
     private void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
+    }
 
-        _rb.mass = FruitMass;
+    private void OnEnable()
+    {
+        //_rb.mass = FruitMass;
     }
 }

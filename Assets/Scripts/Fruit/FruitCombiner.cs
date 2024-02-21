@@ -14,7 +14,13 @@ public class FruitCombiner : MonoBehaviour
     private void Awake()
     {
         _info = GetComponent<FruitInfo>();
-        _layerIndex = gameObject.layer;
+       
+    }
+
+    private void OnEnable()
+    {
+        _layerIndex = gameObject.layer;     
+        WasCombined = false;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -44,25 +50,8 @@ public class FruitCombiner : MonoBehaviour
 
                         else
                         {
-                           
-
-                            Vector3 combinedFruitPos = (transform.position + collision.transform.position) / 2f;// + new Vector3(0f, 0.02f, 0f);
-                            //GameObject go = Instantiate(SpawnCombinedFruit(_info.FruitIndex), GameManager.instance.transform);
-                            //go.transform.position = combinedFruitPos;
-                            GameObject go = Instantiate(SpawnCombinedFruit(_info.FruitIndex), combinedFruitPos, Quaternion.identity);
-
-                            ColliderInformer informer = go.GetComponent<ColliderInformer>();
-                            if (informer != null)
-                            {
-                                informer.WasCombinedIn = true;
-                            }
-
-                            GameObject appearEffect = ObjectPoolManager.SpawnObject(AppearEffect, combinedFruitPos, Quaternion.identity);
-                            //appearEffect.transform.localScale = go.transform.localScale;
-                            Destroy(collision.gameObject);
-                            Destroy(gameObject);
-
-                            //GameManager.instance.CombineObject(gameObject, collision.gameObject, _info.FruitIndex);
+                            MergeInfo mergeInfo = new MergeInfo() { firstObj = gameObject, secondObj = collision.gameObject, currentIndex = _info.FruitIndex };
+                            GameManager.mergeInfos.Add(mergeInfo);
                         }
                     }
                 }

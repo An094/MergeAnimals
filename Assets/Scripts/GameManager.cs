@@ -5,10 +5,18 @@ using TMPro;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
+public class MergeInfo
+{
+    public GameObject firstObj;
+    public GameObject secondObj;
+    public int currentIndex;
+}
+
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
+    public static List<MergeInfo> mergeInfos = new List<MergeInfo>();
     public int CurrentScore { get; set; }
 
     [SerializeField] private GameObject AppearEffect;
@@ -24,6 +32,7 @@ public class GameManager : MonoBehaviour
     private const float PADDING = 2f;
     public float TimeTillGameOver = 1.5f;
 
+    private bool CanCombine = true;
     private void OnEnable()
     {
         SceneManager.sceneLoaded += FadeGame;
@@ -73,7 +82,7 @@ public class GameManager : MonoBehaviour
             float height = Random.Range(-ScreenBounds.y + PADDING, ScreenBounds.y - PADDING);
             float speed = Random.Range(0.25f, 0.5f);
             Vector2 position = new Vector2(side != 0 ? ScreenBounds.x + PADDING : -ScreenBounds.x - PADDING, height);
-            //GameObject cloudObj = Instantiate(CloudPrefab, position, Quaternion.identity);
+            
             GameObject cloudObj = ObjectPoolManager.SpawnObject(CloudPrefab, position, Quaternion.identity);
             Cloud cloud = cloudObj.GetComponent<Cloud>();
             cloud.IsMovingToRight = side == 0;
@@ -150,8 +159,10 @@ public class GameManager : MonoBehaviour
 
     public void CombineObject(GameObject obj1, GameObject obj2, int index)
     {
+        CanCombine = false;
         Destroy(obj1);
         Destroy(obj2);
+
         Vector3 combinedFruitPos = (obj1.transform.position + obj2.transform.position) / 2f + new Vector3(0f, 0.02f, 0f);
         GameObject appearEffect = ObjectPoolManager.SpawnObject(AppearEffect, combinedFruitPos, Quaternion.identity);
 
@@ -176,6 +187,22 @@ public class GameManager : MonoBehaviour
         {
             informer.WasCombinedIn = true;
         }
+
+        CanCombine = true;
         //appearEffect.transform.localScale = go.transform.localScale;
+    }
+
+    private void FixedUpdate()
+    {
+        //while(mergeInfos.Count > 0)
+        if(mergeInfos.Count > 0 && CanCombine)
+        {
+            MergeInfo info = mergeInfos[0];
+            if (info != null)
+            {
+                CombineObject(info.firstObj, info.secondObj, info.currentIndex);
+            }
+            mergeInfos.RemoveAt(0);
+        }
     }
 }

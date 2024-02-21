@@ -41,6 +41,10 @@ public class PlayerController : MonoBehaviour
                 Vector3 TouchPosition = Camera.main.ScreenToWorldPoint(UserInput.TouchPosition);
                 newPosition = new Vector3(TouchPosition.x, transform.position.y, transform.position.z);
             }
+            else
+            {
+                return;
+            }
         }
         else
         {

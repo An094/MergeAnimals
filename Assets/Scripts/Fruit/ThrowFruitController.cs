@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class ThrowFruitController : MonoBehaviour
 {
@@ -10,7 +11,9 @@ public class ThrowFruitController : MonoBehaviour
     [SerializeField] private Transform _fruitTransform;
     [SerializeField] private Transform _parentAfterThrow;
     [SerializeField] private FruitSelector _selector;
+    [SerializeField] private float minDurationToThrow = 1f;
 
+    private float throwTimer = 0f;
     private PlayerController _playerController;
 
     private Rigidbody2D _rb;
@@ -22,7 +25,10 @@ public class ThrowFruitController : MonoBehaviour
 
     public bool CanThrow { get; set; } = true;
 
-
+    // for detection whether touch over UI
+    private PointerEventData _eventDataCurrentPosition;
+    private List<RaycastResult> _result;
+    
     private void Awake()
     {
         if (instance == null)
@@ -40,19 +46,27 @@ public class ThrowFruitController : MonoBehaviour
 
     private void Update()
     {
-        //if (UserInput.IsThrowPressed && CanThrow) 
-        if(Application.isMobilePlatform && UserInput.WasReleasedThisFrame && CanThrow || !Application.isMobilePlatform && UserInput.IsThrowPressed && CanThrow)
+        throwTimer += Time.deltaTime;
+
+        if (throwTimer > minDurationToThrow )
         {
-            SpriteIndex index = CurrentFruit.GetComponent<SpriteIndex>();
-            Quaternion rot = CurrentFruit.transform.rotation;
+            bool isOverUI = IsOverUI();
+            if (Application.isMobilePlatform && UserInput.WasReleasedThisFrame && !isOverUI && CanThrow
+            || !Application.isMobilePlatform && UserInput.IsThrowPressed && CanThrow)
+            {
+                SpriteIndex index = CurrentFruit.GetComponent<SpriteIndex>();
+                Quaternion rot = CurrentFruit.transform.rotation;
 
-            GameObject go = Instantiate(FruitSelector.instance.Fruits[index.Index], CurrentFruit.transform.position, rot);
-            go.transform.SetParent(_parentAfterThrow);
+                GameObject go = Instantiate(FruitSelector.instance.Fruits[index.Index], CurrentFruit.transform.position, rot);
+                go.transform.SetParent(_parentAfterThrow);
 
-            Destroy(CurrentFruit);
+                Destroy(CurrentFruit);
+                CanThrow = false;
 
-            CanThrow = false;
+                throwTimer = 0f;
+            }
         }
+        
     }
 
     public void SpawnAFruit(GameObject fruit)
@@ -66,5 +80,13 @@ public class ThrowFruitController : MonoBehaviour
             Bounds = _collider.bounds;
         }
         _playerController.ChangeBoundary(EXTRA_WIDTH);
+    }
+
+    private bool IsOverUI()
+    {
+        _eventDataCurrentPosition = new PointerEventData(EventSystem.current) { position = UserInput.TouchPosition };
+        _result = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(_eventDataCurrentPosition, _result);
+        return _result.Count > 0;
     }
 }

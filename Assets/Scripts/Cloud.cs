@@ -13,8 +13,7 @@ public class Cloud : MonoBehaviour
         Vector2 Bounds = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));
         if (transform.position.x < (-Bounds.x - 2f) && !IsMovingToRight || transform.position.x > (Bounds.x + 2f) && IsMovingToRight)
         {
-            //Destroy(this.gameObject);
-            ObjectPoolManager.ReturnObjectToPool(gameObject);
+            Destroy(this.gameObject);
         }
         else
         {

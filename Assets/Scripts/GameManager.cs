@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System;
+using DG.Tweening;
 
 public class MergeInfo
 {
@@ -31,11 +32,16 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject TutorialText;
     [SerializeField] private List<Sprite> avatarsprites;
     [SerializeField] private SpriteRenderer playerSprite;
+    [SerializeField] private GameObject IncreaseWidget;
+    [SerializeField] private RectTransform DestinationForIncreaseWidget;
+    [SerializeField] private RectTransform DefaultPositionForIncreaseWidget;
     private Vector2 ScreenBounds;
     private const float PADDING = 2f;
     public float TimeTillGameOver = 1.5f;
 
     private bool CanCombine = true;
+
+    private int LastScoreTriggerIncreaseDB = 0;
     private void OnEnable()
     {
         SceneManager.sceneLoaded += FadeGame;
@@ -105,6 +111,18 @@ public class GameManager : MonoBehaviour
         {
             PlayerPrefs.SetInt("BestScore", CurrentScore);
             _bestScoreText.text = CurrentScore.ToString();
+        }
+
+        int tmp = CurrentScore / 100;
+        if(tmp > 0 && tmp > LastScoreTriggerIncreaseDB)
+        {
+            LastScoreTriggerIncreaseDB = tmp;
+            
+            int CurrentDB = PlayerPrefs.GetInt("DB", 0);
+            PlayerPrefs.SetInt("DB", CurrentDB + 10);
+
+            //Play animation
+            IncreaseDBAnimation();
         }
         _scoreText.text = CurrentScore.ToString("0");
     }
@@ -211,5 +229,28 @@ public class GameManager : MonoBehaviour
             }
             mergeInfos.RemoveAt(0);
         }
+    }
+
+    void IncreaseDBAnimation()
+    {
+        IncreaseWidget.SetActive(true);
+        RectTransform rectTransform = IncreaseWidget.GetComponent<RectTransform>();
+        rectTransform.anchoredPosition = DefaultPositionForIncreaseWidget.anchoredPosition;
+        if (rectTransform != null)
+        {
+            rectTransform.DOAnchorPos(DestinationForIncreaseWidget.anchoredPosition, 1.5f).SetEase(Ease.InOutSine);
+            //Fade to alpha=1 starting from alpha=0 immediately
+            IncreaseWidget.GetComponent<CanvasGroup>().DOFade(0f, 1.5f).From(1f).OnComplete( () => ResetPosition());
+        }
+    }
+
+    void ResetPosition()
+    {
+        RectTransform rectTransform = IncreaseWidget.GetComponent<RectTransform>();
+        if(rectTransform != null )
+        {
+            rectTransform.anchoredPosition = DefaultPositionForIncreaseWidget.anchoredPosition;
+        }
+        IncreaseWidget.SetActive(false);
     }
 }

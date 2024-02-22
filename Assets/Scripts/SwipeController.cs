@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,6 +23,17 @@ public class SwipeController : MonoBehaviour
     {
         CurrentPage = 1;
         TargetPos = LevelPagesRect.localPosition;
+        UpdateArrowButton();
+    }
+
+    private void Start()
+    {
+        string avatar = PlayerPrefs.GetString("Avatar", "Cat1");
+        int numberAvatarInList = Convert.ToInt32(avatar.Substring(3));
+        TargetPos += PageStep * (numberAvatarInList - CurrentPage);
+        CurrentPage = numberAvatarInList;
+        OnChangeItem.Invoke(CurrentPage);
+        LevelPagesRect.LeanMoveLocal(TargetPos, TweenTime).setEase(TweenType);
         UpdateArrowButton();
     }
     public void Next()

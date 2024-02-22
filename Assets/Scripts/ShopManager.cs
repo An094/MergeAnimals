@@ -25,6 +25,8 @@ public class ShopManager : MonoBehaviour
     private string CurrentAvatar;
     private int CurrentItemIndexInSwipe;
 
+    private PosibleAction CurrentAction;
+
     private void Awake()
     {
         swipeController.OnChangeItem += OnSwipeChangeItem;
@@ -32,9 +34,7 @@ public class ShopManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //for debugging
-        PlayerPrefs.SetInt("DB", 1000);
-        NumberOfDB = PlayerPrefs.GetInt("DB", 1000);
+        NumberOfDB = PlayerPrefs.GetInt("DB", 0);
         NumberOfDBallLabel.text = NumberOfDB.ToString();
         CurrentAvatar = PlayerPrefs.GetString("Avatar", "Cat1");
         CurrentItemIndexInSwipe = swipeController.GetCurrentItem();
@@ -44,36 +44,36 @@ public class ShopManager : MonoBehaviour
         //For default avatar
         PlayerPrefs.SetInt("Cat1", 1);
 
-        UpdateUI(PosibleAction.None);
+        CurrentAction = PosibleAction.None;
+
+        UpdateUI();
     }
 
     void OnSwipeChangeItem(int index)
     {
-        PosibleAction action = PosibleAction.None;
-
         string avatarName = "Cat" + index.ToString();
         bool WasBought = PlayerPrefs.GetInt(avatarName, 0) != 0;
         CurrentAvatar = PlayerPrefs.GetString("Avatar", "Cat1");
         CurrentItemIndexInSwipe = index;
         if (WasBought && CurrentAvatar == avatarName)
         {
-            action = PosibleAction.None;//This mean item have been bought and setted as default avatar
+            CurrentAction = PosibleAction.None;//This mean item have been bought and setted as default avatar
         }
         else if (WasBought && CurrentAvatar != avatarName)
         {
-            action = PosibleAction.Use;
+            CurrentAction = PosibleAction.Use;
         }
         else
         {
-            action = PosibleAction.Buy;
+            CurrentAction = PosibleAction.Buy;
         }
-        UpdateUI(action);
+        UpdateUI();
     }
 
-    private void UpdateUI(PosibleAction InBehavior)
+    private void UpdateUI()
     {
         NumberOfDBallLabel.text = NumberOfDB.ToString();
-        switch (InBehavior)
+        switch (CurrentAction)
         {
             case PosibleAction.Buy:
                 {
@@ -116,7 +116,9 @@ public class ShopManager : MonoBehaviour
             PlayerPrefs.SetInt("DB", NumberOfDB);
             string avatarName = "Cat" + CurrentItemIndexInSwipe.ToString();
             PlayerPrefs.SetInt(avatarName, 1);
-            UpdateUI(PosibleAction.Use);
+
+            CurrentAction = PosibleAction.Use;
+            UpdateUI();
         }
 
     }
@@ -125,7 +127,8 @@ public class ShopManager : MonoBehaviour
     {
         string avatarName = "Cat" + CurrentItemIndexInSwipe.ToString();
         PlayerPrefs.SetString("Avatar", avatarName);
-        UpdateUI(PosibleAction.None);
+        CurrentAction = PosibleAction.None;
+        UpdateUI();
     }
 
     public void CloseMenu()
@@ -135,4 +138,21 @@ public class ShopManager : MonoBehaviour
         SceneManager.LoadScene("Menu");
     }
 
+    public void CheatDB()
+    {
+        NumberOfDB = PlayerPrefs.GetInt("DB", 1000);
+        PlayerPrefs.SetInt("DB", NumberOfDB + 1000);
+        UpdateUI();
+    }
+
+    public void DeleteProfile()
+    {
+        PlayerPrefs.DeleteKey("DB");
+        PlayerPrefs.DeleteKey("Avatar");
+        for (int i = 2; i <= 10; ++i)
+        {
+            PlayerPrefs.DeleteKey("Cat" + i);
+        }
+        UpdateUI();
+    }
 }

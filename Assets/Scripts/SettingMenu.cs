@@ -77,6 +77,11 @@ public class SettingsMenu : MonoBehaviour
                 //Fade to alpha=1 starting from alpha=0 immediately
                 menuItems[i].img.DOFade(1f, expandFadeDuration).From(0f);
             }
+
+            mainButton.transform
+              .DORotate(Vector3.forward * 90f, rotationDuration)
+              .From(Vector3.zero)
+              .SetEase(rotationEase);
         }
         else
         {
@@ -87,13 +92,14 @@ public class SettingsMenu : MonoBehaviour
                 //Fade to alpha=0
                 menuItems[i].img.DOFade(0f, collapseFadeDuration);
             }
+
+            mainButton.transform
+             .DORotate(Vector3.zero, rotationDuration)
+             .From(Vector3.forward * 90f)
+             .SetEase(rotationEase);
         }
 
-        //rotate main button arround Z axis by 180 degree starting from 0
-        mainButton.transform
-              .DORotate(Vector3.forward * 180f, rotationDuration)
-              .From(Vector3.zero)
-              .SetEase(rotationEase);
+       
     }
 
     public void OnItemClick(int index)

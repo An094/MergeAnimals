@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System;
 using DG.Tweening;
+using System.Threading.Tasks;
 
 public class MergeInfo
 {
@@ -35,6 +36,15 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject IncreaseWidget;
     [SerializeField] private RectTransform DestinationForIncreaseWidget;
     [SerializeField] private RectTransform DefaultPositionForIncreaseWidget;
+
+    [SerializeField] private GameObject MusicSettingPopup;
+    [SerializeField] private RectTransform MusicSettingPopupPanel;
+    [SerializeField] private CanvasGroup CanvasGround;//dark background
+    [SerializeField] private float duration = 1.0f;
+    private Vector2 DefaultStartPosition = new Vector2(0.0f, 2000f);
+    private Vector2 DefaultEndPosition = new Vector2(0.0f, -2000f);
+
+
     private Vector2 ScreenBounds;
     private const float PADDING = 2f;
     public float TimeTillGameOver = 1.5f;
@@ -61,18 +71,18 @@ public class GameManager : MonoBehaviour
 
         _scoreText.text = CurrentScore.ToString("0");
 
-        if (Application.isMobilePlatform)
-        {
-            //FruitChartForMobile.SetActive(true);
-            //FruitChart.SetActive(false);
-            TutorialText.SetActive(false);
-        }
-        else
-        {
-            //FruitChartForMobile.SetActive(false);
-            //FruitChart.SetActive(true);
-            TutorialText.SetActive(true);
-        }
+        //if (Application.isMobilePlatform)
+        //{
+        //    //FruitChartForMobile.SetActive(true);
+        //    //FruitChart.SetActive(false);
+        //    TutorialText.SetActive(false);
+        //}
+        //else
+        //{
+        //    //FruitChartForMobile.SetActive(false);
+        //    //FruitChart.SetActive(true);
+        //    TutorialText.SetActive(true);
+        //}
     }
 
     private void Start()
@@ -192,6 +202,46 @@ public class GameManager : MonoBehaviour
         GameObject appearEffect = ObjectPoolManager.SpawnObject(AppearEffect, combinedFruitPos, Quaternion.identity);
 
         StartCoroutine(SpawnNewObject(index, combinedFruitPos));
+
+        //Record
+        string NameOfNextObject;
+
+        switch(index)
+        {
+            case 6:
+                {
+                    NameOfNextObject = "Pig";
+                    break;
+                }
+            case 7:
+                {
+                    NameOfNextObject = "Horse";
+                    break;
+                }
+            case 8:
+                {
+                    NameOfNextObject = "Buffalo";
+                    break;
+                }
+            case 9:
+                {
+                    NameOfNextObject = "Tiger";
+                    break;
+                }
+            case 10:
+                {
+                    NameOfNextObject = "Dragon";
+                    break;
+                }
+            default:
+                {
+                    NameOfNextObject = "";
+                    break;
+                }
+        }
+
+        int NumberInRecordOfObject = PlayerPrefs.GetInt(NameOfNextObject, 0);
+        PlayerPrefs.SetInt(NameOfNextObject, NumberInRecordOfObject + 1);
     }
 
     private IEnumerator SpawnNewObject(int index, Vector3 spawnPosition)
@@ -252,5 +302,33 @@ public class GameManager : MonoBehaviour
             rectTransform.anchoredPosition = DefaultPositionForIncreaseWidget.anchoredPosition;
         }
         IncreaseWidget.SetActive(false);
+    }
+
+
+    public void OpenMusicSettingPopup()
+    {
+        MusicSettingPopup.SetActive(true);
+        MusicSettingPopupIntro();
+    }
+
+    public async void CloseMusicSettingPopup()
+    {
+        await MusicSettingPopupOuttro();
+        MusicSettingPopupPanel.anchoredPosition = DefaultStartPosition;
+        MusicSettingPopup.SetActive(false);
+    }
+
+    private void MusicSettingPopupIntro()
+    {
+        CanvasGround.DOFade(1, duration).SetUpdate(true);
+        //MusicSettingPopupPanel.DOAnchorPosY(0, duration).SetUpdate(true);
+        MusicSettingPopupPanel.DOAnchorPosY(0, duration).SetEase(Ease.OutQuint);
+    }
+
+    private async Task MusicSettingPopupOuttro()
+    {
+        CanvasGround.DOFade(0, duration).SetUpdate(true);
+        //await MusicSettingPopupPanel.DOAnchorPosY(DefaultEndPosition.y, duration).SetUpdate(true).AsyncWaitForCompletion();
+        await MusicSettingPopupPanel.DOAnchorPosY(DefaultEndPosition.y, duration).SetEase(Ease.InOutQuint).AsyncWaitForCompletion();
     }
 }

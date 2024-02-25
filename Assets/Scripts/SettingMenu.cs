@@ -111,12 +111,12 @@ public class SettingsMenu : MonoBehaviour
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
                 break;
             case 1:
-                SceneManager.LoadScene("LevelSelection");
-                break;
-            case 2:
-                //third button
                 SceneManager.LoadScene("Menu");
                 break;
+            case 2:
+                GameManager.instance.OpenMusicSettingPopup();
+                break;
+
         }
     }
 

@@ -108,10 +108,10 @@ public class SettingsMenu : MonoBehaviour
         switch (index)
         {
             case 0:
-                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+                GameManager.instance.OpenReplayPopup();
                 break;
             case 1:
-                SceneManager.LoadScene("Menu");
+                GameManager.instance.OpenExitPopup();
                 break;
             case 2:
                 GameManager.instance.OpenMusicSettingPopup();

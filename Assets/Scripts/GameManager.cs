@@ -37,8 +37,13 @@ public class GameManager : MonoBehaviour
     [SerializeField] private RectTransform DestinationForIncreaseWidget;
     [SerializeField] private RectTransform DefaultPositionForIncreaseWidget;
 
-    [SerializeField] private GameObject MusicSettingPopup;
+    [SerializeField] private GameObject Popups;
+    [SerializeField] private GameObject AudioSettingPopup;
+    [SerializeField] private GameObject ExitConfirmPopup;
+    [SerializeField] private GameObject ReplayConfirmPopup;
     [SerializeField] private RectTransform MusicSettingPopupPanel;
+    [SerializeField] private RectTransform ExitConfirmPopupPanel;
+    [SerializeField] private RectTransform ReplayConfirmPopupPanel;
     [SerializeField] private CanvasGroup CanvasGround;//dark background
     [SerializeField] private float duration = 1.0f;
     private Vector2 DefaultStartPosition = new Vector2(0.0f, 2000f);
@@ -94,6 +99,11 @@ public class GameManager : MonoBehaviour
         ScreenBounds = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));
         _bestScoreText.text = PlayerPrefs.GetInt("BestScore", 0).ToString();
         StartCoroutine(SpawnClouds());
+
+        MusicSettingPopupPanel.anchoredPosition = new Vector3(0f, 2000f, 0f);
+        ExitConfirmPopupPanel.anchoredPosition = new Vector3(0f, 2000f, 0f);
+        ReplayConfirmPopupPanel.anchoredPosition = new Vector3(0f, 2000f, 0f);
+        
     }
 
     IEnumerator SpawnClouds()
@@ -105,7 +115,7 @@ public class GameManager : MonoBehaviour
             float height = UnityEngine.Random.Range(-ScreenBounds.y + PADDING, ScreenBounds.y - PADDING);
             float speed = UnityEngine.Random.Range(0.25f, 0.5f);
             Vector2 position = new Vector2(side != 0 ? ScreenBounds.x + PADDING : -ScreenBounds.x - PADDING, height);
-            
+
             GameObject cloudObj = ObjectPoolManager.SpawnObject(CloudPrefab, position, Quaternion.identity);
             Cloud cloud = cloudObj.GetComponent<Cloud>();
             cloud.IsMovingToRight = side == 0;
@@ -124,10 +134,10 @@ public class GameManager : MonoBehaviour
         }
 
         int tmp = CurrentScore / 100;
-        if(tmp > 0 && tmp > LastScoreTriggerIncreaseDB)
+        if (tmp > 0 && tmp > LastScoreTriggerIncreaseDB)
         {
             LastScoreTriggerIncreaseDB = tmp;
-            
+
             int CurrentDB = PlayerPrefs.GetInt("DB", 0);
             PlayerPrefs.SetInt("DB", CurrentDB + 10);
 
@@ -206,7 +216,7 @@ public class GameManager : MonoBehaviour
         //Record
         string NameOfNextObject;
 
-        switch(index)
+        switch (index)
         {
             case 6:
                 {
@@ -252,7 +262,7 @@ public class GameManager : MonoBehaviour
             elapsedTime += Time.deltaTime;
             yield return null;
         }
-        
+
         GameObject nextObj = FruitSelector.instance.Fruits[index + 1];
         GameObject go = Instantiate(nextObj, GameManager.instance.transform);
         go.transform.position = spawnPosition;
@@ -270,7 +280,7 @@ public class GameManager : MonoBehaviour
     private void FixedUpdate()
     {
         //while(mergeInfos.Count > 0)
-        if(mergeInfos.Count > 0 && CanCombine)
+        if (mergeInfos.Count > 0 && CanCombine)
         {
             MergeInfo info = mergeInfos[0];
             if (info != null)
@@ -290,14 +300,14 @@ public class GameManager : MonoBehaviour
         {
             rectTransform.DOAnchorPos(DestinationForIncreaseWidget.anchoredPosition, 1.5f).SetEase(Ease.InOutSine);
             //Fade to alpha=1 starting from alpha=0 immediately
-            IncreaseWidget.GetComponent<CanvasGroup>().DOFade(0f, 1.5f).From(1f).OnComplete( () => ResetPosition());
+            IncreaseWidget.GetComponent<CanvasGroup>().DOFade(0f, 1.5f).From(1f).OnComplete(() => ResetPosition());
         }
     }
 
     void ResetPosition()
     {
         RectTransform rectTransform = IncreaseWidget.GetComponent<RectTransform>();
-        if(rectTransform != null )
+        if (rectTransform != null)
         {
             rectTransform.anchoredPosition = DefaultPositionForIncreaseWidget.anchoredPosition;
         }
@@ -307,7 +317,10 @@ public class GameManager : MonoBehaviour
 
     public void OpenMusicSettingPopup()
     {
-        MusicSettingPopup.SetActive(true);
+        Popups.SetActive(true);
+        AudioSettingPopup.SetActive(true);
+        ExitConfirmPopup.SetActive(false);
+        ReplayConfirmPopup.SetActive(false);
         MusicSettingPopupIntro();
     }
 
@@ -315,7 +328,10 @@ public class GameManager : MonoBehaviour
     {
         await MusicSettingPopupOuttro();
         MusicSettingPopupPanel.anchoredPosition = DefaultStartPosition;
-        MusicSettingPopup.SetActive(false);
+        Popups.SetActive(false);
+        AudioSettingPopup.SetActive(false);
+        ExitConfirmPopup.SetActive(false);
+        ReplayConfirmPopup.SetActive(false);
     }
 
     private void MusicSettingPopupIntro()
@@ -330,5 +346,81 @@ public class GameManager : MonoBehaviour
         CanvasGround.DOFade(0, duration).SetUpdate(true);
         //await MusicSettingPopupPanel.DOAnchorPosY(DefaultEndPosition.y, duration).SetUpdate(true).AsyncWaitForCompletion();
         await MusicSettingPopupPanel.DOAnchorPosY(DefaultEndPosition.y, duration).SetEase(Ease.InOutQuint).AsyncWaitForCompletion();
+    }
+
+    public void OpenExitPopup()
+    {
+        Popups.SetActive(true);
+        AudioSettingPopup.SetActive(false);
+        ExitConfirmPopup.SetActive(true);
+        ReplayConfirmPopup.SetActive(false);
+        ExitConfirmPopupIntro();
+    }
+
+    public async void CloseExitPopup()
+    {
+        await ExitConfirmPopupOuttro();
+        ExitConfirmPopupPanel.anchoredPosition = DefaultStartPosition;
+        Popups.SetActive(false);
+        AudioSettingPopup.SetActive(false);
+        ExitConfirmPopup.SetActive(false);
+        ReplayConfirmPopup.SetActive(false);
+    }
+
+    private void ExitConfirmPopupIntro()
+    {
+        CanvasGround.DOFade(1, duration).SetUpdate(true);
+        //MusicSettingPopupPanel.DOAnchorPosY(0, duration).SetUpdate(true);
+        ExitConfirmPopupPanel.DOAnchorPosY(0, duration).SetEase(Ease.OutQuint);
+    }
+
+    private async Task ExitConfirmPopupOuttro()
+    {
+        CanvasGround.DOFade(0, duration).SetUpdate(true);
+        //await MusicSettingPopupPanel.DOAnchorPosY(DefaultEndPosition.y, duration).SetUpdate(true).AsyncWaitForCompletion();
+        await ExitConfirmPopupPanel.DOAnchorPosY(DefaultEndPosition.y, duration).SetEase(Ease.InOutQuint).AsyncWaitForCompletion();
+    }
+
+    public void OpenReplayPopup()
+    {
+        Popups.SetActive(true);
+        AudioSettingPopup.SetActive(false);
+        ExitConfirmPopup.SetActive(false);
+        ReplayConfirmPopup.SetActive(true);
+        ReplayConfirmPopupIntro();
+    }
+
+    public async void CloseReplayPopup()
+    {
+        await ReplayConfirmPopupOuttro();
+        ReplayConfirmPopupPanel.anchoredPosition = DefaultStartPosition;
+        Popups.SetActive(false);
+        AudioSettingPopup.SetActive(false);
+        ExitConfirmPopup.SetActive(false);
+        ReplayConfirmPopup.SetActive(false);
+    }
+
+    private void ReplayConfirmPopupIntro()
+    {
+        CanvasGround.DOFade(1, duration).SetUpdate(true);
+        //MusicSettingPopupPanel.DOAnchorPosY(0, duration).SetUpdate(true);
+        ReplayConfirmPopupPanel.DOAnchorPosY(0, duration).SetEase(Ease.OutQuint);
+    }
+
+    private async Task ReplayConfirmPopupOuttro()
+    {
+        CanvasGround.DOFade(0, duration).SetUpdate(true);
+        //await MusicSettingPopupPanel.DOAnchorPosY(DefaultEndPosition.y, duration).SetUpdate(true).AsyncWaitForCompletion();
+        await ReplayConfirmPopupPanel.DOAnchorPosY(DefaultEndPosition.y, duration).SetEase(Ease.InOutQuint).AsyncWaitForCompletion();
+    }
+
+    public void OnExitClicked()
+    {
+        SceneManager.LoadScene("Menu");
+    }
+
+    public void OnReplayClicked()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

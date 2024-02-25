@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MenuManager : MonoBehaviour
 {
@@ -15,16 +16,52 @@ public class MenuManager : MonoBehaviour
     [SerializeField] private RectTransform RecordPopupPanel;
     [SerializeField] private CanvasGroup CanvasGround;//dark background
     [SerializeField] private float duration = 1.0f;
+
+    [SerializeField] private RectTransform MenuHeader;
+    [SerializeField] private RectTransform MenuBody;
     private Vector2 DefaultStartPosition = new Vector2(0.0f, 2000f);
     private Vector2 DefaultEndPosition = new Vector2(0.0f, -2000f);
 
     private void Start()
     {
-        string CurrentBGM = PlayerPrefs.GetString("BGM", "Playwithme");
-        AudioManager.Instance.PlayMusic(CurrentBGM);
+        {
+            string CurrentBGM = PlayerPrefs.GetString("BGM", "Playwithme");
+            AudioManager.Instance.PlayMusic(CurrentBGM);
+        }
+        
         MusicSettingPopupPanel.anchoredPosition = DefaultStartPosition;
         RecordPopupPanel.anchoredPosition = DefaultStartPosition;
+
+        ///MenuAnimation
+        MenuHeader.anchoredPosition = new Vector3(0f, 2000f, 0f);
+        MenuBody.anchoredPosition = new Vector3(0f, -2000f, 0f);
+        StartMenuIntro();
     }
+
+    private void StartMenuIntro()
+    {
+        MenuHeader.DOAnchorPos(new Vector3(0f, 300f, 0f), 1.5f, false).SetEase(Ease.OutQuint);
+        MenuBody.DOAnchorPos(new Vector3(0f, -100f, 0f), 1.5f, false).SetEase(Ease.OutQuint);
+    }
+
+    private async Task StartMenuOuttro()
+    {
+        MenuHeader.DOAnchorPos(new Vector3(0f, 2000f, 0f), 1f, false).SetEase(Ease.InQuint);
+        await MenuBody.DOAnchorPos(new Vector3(0f, -2000f, 0f), 1f, false).SetEase(Ease.InQuint).AsyncWaitForCompletion();
+    }
+
+    public async void OnPlayClicked()
+    {
+        await StartMenuOuttro();
+        SceneManager.LoadScene("Dragon");
+    }
+
+    public async void OnShopClicked()
+    {
+        await StartMenuOuttro();
+        SceneManager.LoadScene("Shop");
+    }
+
     public void OpenMusicSettingPopup()
     {
         MainMenu.SetActive(false);

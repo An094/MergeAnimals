@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MenuManager : MonoBehaviour
 {
@@ -19,6 +20,8 @@ public class MenuManager : MonoBehaviour
 
     [SerializeField] private RectTransform MenuHeader;
     [SerializeField] private RectTransform MenuBody;
+
+    [SerializeField] private List<RectTransform> Buttons;
     private Vector2 DefaultStartPosition = new Vector2(0.0f, 2000f);
     private Vector2 DefaultEndPosition = new Vector2(0.0f, -2000f);
 
@@ -33,15 +36,31 @@ public class MenuManager : MonoBehaviour
         RecordPopupPanel.anchoredPosition = DefaultStartPosition;
 
         ///MenuAnimation
-        MenuHeader.anchoredPosition = new Vector3(0f, 2000f, 0f);
-        MenuBody.anchoredPosition = new Vector3(0f, -2000f, 0f);
+        
         StartMenuIntro();
     }
 
     private void StartMenuIntro()
     {
+        MenuHeader.anchoredPosition = new Vector3(0f, 2000f, 0f);
+        MenuBody.anchoredPosition = new Vector3(0f, -2000f, 0f);
         MenuHeader.DOAnchorPos(new Vector3(0f, 300f, 0f), 1.5f, false).SetEase(Ease.OutQuint);
         MenuBody.DOAnchorPos(new Vector3(0f, -100f, 0f), 1.5f, false).SetEase(Ease.OutQuint);
+        StartCoroutine(ItemAnimation());
+    }
+
+    IEnumerator ItemAnimation()
+    {
+        foreach(var item in Buttons)
+        {
+            item.transform.localScale = Vector3.zero;
+        }
+        yield return new WaitForSeconds(1f);
+        foreach (var item in Buttons)
+        {
+            item.transform.DOScale(0.6f, duration).SetEase(Ease.OutBounce);
+            yield return new WaitForSeconds(0.25f);
+        }
     }
 
     private async Task StartMenuOuttro()
@@ -79,6 +98,7 @@ public class MenuManager : MonoBehaviour
         Popups.SetActive(false);
         AudioSettingPopup.SetActive(false);
         RecordPopup.SetActive(false);
+        StartMenuIntro();
     }
 
     private void MusicSettingPopupIntro()
@@ -112,6 +132,7 @@ public class MenuManager : MonoBehaviour
         Popups.SetActive(false);
         AudioSettingPopup.SetActive(false);
         RecordPopup.SetActive(false);
+        StartMenuIntro();
     }
 
     private void RecordPopupIntro()

@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using DG.Tweening;
+using UnityEngine.Events;
 
 public enum PosibleAction
 {
@@ -21,11 +23,17 @@ public class ShopManager : MonoBehaviour
     [SerializeField] private GameObject UseImage;
     [SerializeField] private GameObject BuyImage;
     [SerializeField] private GameObject TickWidget;
+
+    [SerializeField] private RectTransform MenuMainRect;
+    [SerializeField] private RectTransform ShopIconRect;
     private int NumberOfDB;
     private string CurrentAvatar;
     private int CurrentItemIndexInSwipe;
 
     private PosibleAction CurrentAction;
+
+    public delegate void IntroCompleted();
+    public IntroCompleted OnIntroCompleted;
 
     private void Awake()
     {
@@ -47,6 +55,21 @@ public class ShopManager : MonoBehaviour
         CurrentAction = PosibleAction.None;
 
         UpdateUI();
+
+        Intro();
+    }
+
+    private void Intro()
+    {
+        MenuMainRect.anchoredPosition = new Vector2(-2000, 0f);
+        ShopIconRect.transform.localScale = Vector3.zero;
+        MenuMainRect.DOAnchorPos(new Vector2(0f, 0f), 1.5f).SetEase(Ease.OutQuint).OnComplete(() => ShopIconAnimation());
+        
+    }
+
+    private void ShopIconAnimation()
+    {
+        ShopIconRect.transform.DOScale(1.2f, .5f).SetEase(Ease.OutBounce).OnComplete(() => OnIntroCompleted.Invoke());
     }
 
     void OnSwipeChangeItem(int index)
@@ -72,6 +95,7 @@ public class ShopManager : MonoBehaviour
 
     private void UpdateUI()
     {
+        NumberOfDB = PlayerPrefs.GetInt("DB", 0);
         NumberOfDBallLabel.text = NumberOfDB.ToString();
         switch (CurrentAction)
         {
@@ -83,6 +107,9 @@ public class ShopManager : MonoBehaviour
                     UseImage.SetActive(false);
                     TickWidget.SetActive(false);
                     //TODO: Disable buy button when not enough DB
+
+                    BuyImage.GetComponent<Button>().interactable = NumberOfDB >= 100;
+
                     break;
                 }
             case PosibleAction.Use:
@@ -109,8 +136,8 @@ public class ShopManager : MonoBehaviour
     }
     public void Buy()
     {
-        NumberOfDB = PlayerPrefs.GetInt("DB", 1000);
-        if (NumberOfDB > DefaultPrice)
+        NumberOfDB = PlayerPrefs.GetInt("DB", 0);
+        if (NumberOfDB >= DefaultPrice)
         {
             NumberOfDB -= DefaultPrice;
             PlayerPrefs.SetInt("DB", NumberOfDB);
@@ -133,15 +160,13 @@ public class ShopManager : MonoBehaviour
 
     public void CloseMenu()
     {
-        ///Animation
-
-        SceneManager.LoadScene("Menu");
+        MenuMainRect.DOAnchorPos(new Vector2(2000, 0f), 1.5f).SetEase(Ease.InQuint).OnComplete(() => SceneManager.LoadScene("Menu"));
     }
 
     public void CheatDB()
     {
-        NumberOfDB = PlayerPrefs.GetInt("DB", 1000);
-        PlayerPrefs.SetInt("DB", NumberOfDB + 1000);
+        NumberOfDB = PlayerPrefs.GetInt("DB", 0);
+        PlayerPrefs.SetInt("DB", NumberOfDB + 100);
         UpdateUI();
     }
 

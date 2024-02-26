@@ -16,11 +16,13 @@ public class SwipeController : MonoBehaviour
     [SerializeField] LeanTweenType TweenType;
     [SerializeField] Button PreviousBtn, NextBtn;
 
+    [SerializeField] ShopManager ShopManager;
     private int CurrentPage;
     private Vector3 TargetPos;
 
     private void Awake()
     {
+        ShopManager.OnIntroCompleted += SwipeAnimation;
         CurrentPage = 1;
         TargetPos = LevelPagesRect.localPosition;
         UpdateArrowButton();
@@ -33,9 +35,16 @@ public class SwipeController : MonoBehaviour
         TargetPos += PageStep * (numberAvatarInList - CurrentPage);
         CurrentPage = numberAvatarInList;
         OnChangeItem.Invoke(CurrentPage);
+        //LevelPagesRect.LeanMoveLocal(TargetPos, TweenTime).setEase(TweenType);
+        UpdateArrowButton();
+    }
+
+    private void SwipeAnimation()
+    {
         LevelPagesRect.LeanMoveLocal(TargetPos, TweenTime).setEase(TweenType);
         UpdateArrowButton();
     }
+
     public void Next()
     {
         if(CurrentPage < MaxPage)

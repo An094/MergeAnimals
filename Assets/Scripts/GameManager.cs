@@ -279,16 +279,78 @@ public class GameManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        //while(mergeInfos.Count > 0)
         if (mergeInfos.Count > 0 && CanCombine)
         {
             MergeInfo info = mergeInfos[0];
             if (info != null)
             {
-                CombineObject(info.firstObj, info.secondObj, info.currentIndex);
+                SimpleCombineObjects(info.firstObj, info.secondObj, info.currentIndex);
             }
             mergeInfos.RemoveAt(0);
         }
+    }
+
+    private void SimpleCombineObjects(GameObject obj1, GameObject obj2, int index)
+    {
+        CanCombine = false;
+
+        Vector3 combinedFruitPos = (obj1.transform.position + obj2.transform.position) / 2f;
+
+        GameObject nextObj = FruitSelector.instance.Fruits[index + 1];
+        GameObject go = Instantiate(nextObj, combinedFruitPos, Quaternion.identity);
+
+        ColliderInformer informer = go.GetComponent<ColliderInformer>();
+        if (informer != null)
+        {
+            informer.WasCombinedIn = true;
+        }
+
+        GameObject appearEffect = ObjectPoolManager.SpawnObject(AppearEffect, combinedFruitPos, Quaternion.identity);
+
+        Destroy(obj1);
+        Destroy(obj2);
+
+        //Record
+        string NameOfNextObject;
+
+        switch (index)
+        {
+            case 6:
+                {
+                    NameOfNextObject = "Pig";
+                    break;
+                }
+            case 7:
+                {
+                    NameOfNextObject = "Horse";
+                    break;
+                }
+            case 8:
+                {
+                    NameOfNextObject = "Buffalo";
+                    break;
+                }
+            case 9:
+                {
+                    NameOfNextObject = "Tiger";
+                    break;
+                }
+            case 10:
+                {
+                    NameOfNextObject = "Dragon";
+                    break;
+                }
+            default:
+                {
+                    NameOfNextObject = "";
+                    break;
+                }
+        }
+
+        int NumberInRecordOfObject = PlayerPrefs.GetInt(NameOfNextObject, 0);
+        PlayerPrefs.SetInt(NameOfNextObject, NumberInRecordOfObject + 1);
+
+        CanCombine = true;
     }
 
     void IncreaseDBAnimation()
@@ -298,9 +360,9 @@ public class GameManager : MonoBehaviour
         rectTransform.anchoredPosition = DefaultPositionForIncreaseWidget.anchoredPosition;
         if (rectTransform != null)
         {
-            rectTransform.DOAnchorPos(DestinationForIncreaseWidget.anchoredPosition, 1.5f).SetEase(Ease.InOutSine);
+            rectTransform.DOAnchorPos(DestinationForIncreaseWidget.anchoredPosition, 2f).SetEase(Ease.InOutSine);
             //Fade to alpha=1 starting from alpha=0 immediately
-            IncreaseWidget.GetComponent<CanvasGroup>().DOFade(0f, 1.5f).From(1f).OnComplete(() => ResetPosition());
+            IncreaseWidget.GetComponent<CanvasGroup>().DOFade(0f, 2f).From(1f).OnComplete(() => ResetPosition());
         }
     }
 

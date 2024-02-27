@@ -10976,7 +10976,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.599
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -48433,7 +48433,19 @@ MonoBehaviour:
     m_clip: {fileID: 8300000, guid: 7c8f0f149d366b74784946fc47cd91b5, type: 3}
   - m_name: YummyFlavor
     m_clip: {fileID: 8300000, guid: d52098a0060b12743833b88be684da07, type: 3}
-  sfxSounds: []
+  sfxSounds:
+  - m_name: Jump1
+    m_clip: {fileID: 8300000, guid: f4cff19718c0de2409bd302e63bd482e, type: 3}
+  - m_name: Jump2
+    m_clip: {fileID: 8300000, guid: e2dd0a8e5fd35df4eb945b4912b5ccd8, type: 3}
+  - m_name: Jump3
+    m_clip: {fileID: 8300000, guid: f4cff19718c0de2409bd302e63bd482e, type: 3}
+  - m_name: WeLost
+    m_clip: {fileID: 8300000, guid: 89799857a0a6b094980d09b969bb69ad, type: 3}
+  - m_name: Congratulation
+    m_clip: {fileID: 8300000, guid: 7a830737f6391374b95cf9b4cfba65fe, type: 3}
+  - m_name: IWillDoMyBest
+    m_clip: {fileID: 8300000, guid: 5ff6a0b1f0ad5f74a8d0b67dfb1e038c, type: 3}
   musicSource: {fileID: 555116703}
   sfxSource: {fileID: 495069991}
 --- !u!1 &1632380363
@@ -63868,12 +63880,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 591863118257818177, guid: 4a37a90d6ae08fb4b863a79b82b95845, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1238806331178526982, guid: 4a37a90d6ae08fb4b863a79b82b95845, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 680813080}
+    - target: {fileID: 3432598532875342710, guid: 4a37a90d6ae08fb4b863a79b82b95845, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6307636233758896880, guid: 4a37a90d6ae08fb4b863a79b82b95845, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -63976,7 +63992,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7557382035977489634, guid: 4a37a90d6ae08fb4b863a79b82b95845, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9096387916057037035, guid: 4a37a90d6ae08fb4b863a79b82b95845, type: 3}
       propertyPath: m_AnchorMax.x

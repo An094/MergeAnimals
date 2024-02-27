@@ -54,6 +54,7 @@ public class ThrowFruitController : MonoBehaviour
             if (Application.isMobilePlatform && UserInput.WasReleasedThisFrame && !isOverUI && CanThrow
             || !Application.isMobilePlatform && UserInput.IsThrowPressed && CanThrow)
             {
+                GameManager.instance.PlaySFXWhenThrow();
                 SpriteIndex index = CurrentFruit.GetComponent<SpriteIndex>();
                 Quaternion rot = CurrentFruit.transform.rotation;
 

@@ -3,9 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using static SwipeController;
 
-public class SwipeController : MonoBehaviour
+public class SwipeController : MonoBehaviour, IEndDragHandler
 {
     public delegate void ChangeItem(int index);
     public ChangeItem OnChangeItem;
@@ -19,6 +20,7 @@ public class SwipeController : MonoBehaviour
     [SerializeField] ShopManager ShopManager;
     private int CurrentPage;
     private Vector3 TargetPos;
+    private float DragThreashold;
 
     private void Awake()
     {
@@ -30,6 +32,7 @@ public class SwipeController : MonoBehaviour
 
     private void Start()
     {
+        DragThreashold = Screen.width / 15;
         string avatar = PlayerPrefs.GetString("Avatar", "Cat1");
         int numberAvatarInList = Convert.ToInt32(avatar.Substring(3));
         TargetPos += PageStep * (numberAvatarInList - CurrentPage);
@@ -89,5 +92,24 @@ public class SwipeController : MonoBehaviour
     public int GetCurrentItem()
     {
         return CurrentPage;
+    }
+
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        if (Math.Abs(eventData.position.x - eventData.pressPosition.x) > DragThreashold)
+        {
+            if (eventData.position.x > eventData.pressPosition.x)
+            {
+                Previous();
+            }
+            else
+            {
+                Next();
+            }
+        }
+        else
+        {
+            MovePage();
+        }
     }
 }

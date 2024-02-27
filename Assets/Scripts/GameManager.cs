@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 using System;
 using DG.Tweening;
 using System.Threading.Tasks;
+using CandyCoded.HapticFeedback;
 
 public class MergeInfo
 {
@@ -21,6 +22,9 @@ public class GameManager : MonoBehaviour
 
     public static List<MergeInfo> mergeInfos = new List<MergeInfo>();
     public int CurrentScore { get; set; }
+
+    public delegate void FadeInCompleted();
+    public FadeInCompleted OnFadeInCompleted;
 
     [SerializeField] private GameObject AppearEffect;
     [SerializeField] private TextMeshProUGUI _scoreText;
@@ -49,12 +53,12 @@ public class GameManager : MonoBehaviour
     private Vector2 DefaultStartPosition = new Vector2(0.0f, 2000f);
     private Vector2 DefaultEndPosition = new Vector2(0.0f, -2000f);
 
+    float elapsedTime;
 
     private Vector2 ScreenBounds;
     private const float PADDING = 2f;
     public float TimeTillGameOver = 1.5f;
 
-    private bool CanCombine = true;
 
     private int LastScoreTriggerIncreaseDB = 0;
     private void OnEnable()
@@ -200,11 +204,12 @@ public class GameManager : MonoBehaviour
         }
 
         _gameOverPanel.gameObject.SetActive(false);
+        AudioManager.Instance.PlaySFX("IWillDoMyBest");
+        OnFadeInCompleted.Invoke();
     }
 
     public void CombineObject(GameObject obj1, GameObject obj2, int index)
     {
-        CanCombine = false;
         Destroy(obj1);
         Destroy(obj2);
 
@@ -272,14 +277,18 @@ public class GameManager : MonoBehaviour
         {
             informer.WasCombinedIn = true;
         }
-
-        CanCombine = true;
         //appearEffect.transform.localScale = go.transform.localScale;
     }
 
     private void FixedUpdate()
     {
-        if (mergeInfos.Count > 0 && CanCombine)
+        elapsedTime += Time.deltaTime;
+        if (elapsedTime < 0.2f)
+        {
+            return;
+        }
+
+        if (mergeInfos.Count > 0)
         {
             MergeInfo info = mergeInfos[0];
             if (info != null)
@@ -292,7 +301,7 @@ public class GameManager : MonoBehaviour
 
     private void SimpleCombineObjects(GameObject obj1, GameObject obj2, int index)
     {
-        CanCombine = false;
+        elapsedTime = 0.0f;
 
         Vector3 combinedFruitPos = (obj1.transform.position + obj2.transform.position) / 2f;
 
@@ -309,6 +318,11 @@ public class GameManager : MonoBehaviour
 
         Destroy(obj1);
         Destroy(obj2);
+
+        if(Application.isMobilePlatform)
+        {
+            MediumVibration();
+        }
 
         //Record
         string NameOfNextObject;
@@ -349,8 +363,6 @@ public class GameManager : MonoBehaviour
 
         int NumberInRecordOfObject = PlayerPrefs.GetInt(NameOfNextObject, 0);
         PlayerPrefs.SetInt(NameOfNextObject, NumberInRecordOfObject + 1);
-
-        CanCombine = true;
     }
 
     void IncreaseDBAnimation()
@@ -484,5 +496,29 @@ public class GameManager : MonoBehaviour
     public void OnReplayClicked()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void PlaySFXWhenThrow()
+    {
+        string[] Names = { "Jump1", "Jump2", "Jump3" };
+
+        int index = UnityEngine.Random.Range(0, Names.Length);
+
+        AudioManager.Instance.PlaySFX(Names[index]);
+    }
+
+    public void LightVibration()
+    {
+        HapticFeedback.LightFeedback();
+    }
+
+    public void MediumVibration()
+    {
+        HapticFeedback.MediumFeedback();
+    }
+
+    public void HeavyVibration()
+    {
+        HapticFeedback.HeavyFeedback();
     }
 }

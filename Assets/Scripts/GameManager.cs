@@ -59,6 +59,10 @@ public class GameManager : MonoBehaviour
     private const float PADDING = 2f;
     public float TimeTillGameOver = 1.5f;
 
+    bool HasHorse = false;
+    bool HasBuffalo = false;
+    bool HasTiger = false;
+    bool HasDragon = false;
 
     private int LastScoreTriggerIncreaseDB = 0;
     private void OnEnable()
@@ -337,21 +341,41 @@ public class GameManager : MonoBehaviour
             case 7:
                 {
                     NameOfNextObject = "Horse";
+                    if(!HasHorse)
+                    {
+                        HasHorse = true;
+                        AudioManager.Instance.PlaySFX("Congratulation");
+                    }
                     break;
                 }
             case 8:
                 {
                     NameOfNextObject = "Buffalo";
+                    if (!HasBuffalo)
+                    {
+                        HasBuffalo = true;
+                        AudioManager.Instance.PlaySFX("Congratulation");
+                    }
                     break;
                 }
             case 9:
                 {
                     NameOfNextObject = "Tiger";
+                    if (!HasTiger)
+                    {
+                        HasTiger = true;
+                        AudioManager.Instance.PlaySFX("Congratulation");
+                    }
                     break;
                 }
             case 10:
                 {
                     NameOfNextObject = "Dragon";
+                    if (!HasDragon)
+                    {
+                        HasDragon = true;
+                        AudioManager.Instance.PlaySFX("Congratulation");
+                    }
                     break;
                 }
             default:
